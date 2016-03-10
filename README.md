@@ -21,5 +21,5 @@ Compile this plugin
 
  - Please follow [PluginDevelopment](http://www.jetbrains.org/intellij/sdk/docs/) to setup up your IDE
  - Open this project and compile
- - Click "Build" menu and select "Prepare Plugin Module Intellij-TabSelection For Deployment"
+ - Click "Build" menu and select "Prepare Plugin Module CLion-GoogleCppStyleCompletion For Deployment"
  - Install the generated .jar file in the "Settings -> Plugins" dialog.
