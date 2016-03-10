@@ -23,3 +23,8 @@ Compile this plugin
  - Open this project and compile
  - Click "Build" menu and select "Prepare Plugin Module CLion-GoogleCppStyleCompletion For Deployment"
  - Install the generated .jar file in the "Settings -> Plugins" dialog.
+ - 
+Known issue
+===========
+
+ - Suggestions provided by this plugin rank low. They usually appear at the last position. Fix it if you know how.
