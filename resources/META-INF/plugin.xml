@@ -1,0 +1,40 @@
+<idea-plugin version="2">
+  <id>com.github.itechbear.googlecppstylecompletion</id>
+  <name>CLion-GoogleCppStyleCompletion</name>
+  <version>0.1</version>
+  <vendor email="itechbear@gmail.com" url="http://github.com/itechbear/googlecppstylecompletion">itechbear</vendor>
+
+  <description><![CDATA[
+      This plugin provides <https://google.github.io/styleguide/cppguide.html>Google C++ Style</a> suggestions for code completions for following elements: <br />
+      <ol>
+        <li>Variable names</li>
+      </ol>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      0.1 Add variable name suggestion support.
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="139.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+  <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.modules.clion</depends>
+  <depends>com.intellij.modules.cidr.lang</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+    <completion.contributor language="ObjectiveC" implementationClass="com.github.itechbear.googlestylecompletion.GoogleStyleVariableNameCompletionContributor"/>
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>
