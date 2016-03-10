@@ -8,6 +8,7 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.util.ProcessingContext;
 import com.jetbrains.cidr.lang.OCLanguage;
+import com.jetbrains.cidr.lang.psi.OCStruct;
 import com.jetbrains.cidr.lang.psi.OCTypeElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,42 +24,74 @@ public class GoogleStyleVariableNameCompletionContributor extends CompletionCont
     );
   }
 
+  /**
+   * Form a variable name from a type.
+   * @param type
+   * @return
+   */
+  public static String getVarableFromType(final String type, final boolean isMember) {
+    final String[] tokens = type.split("[^\\w_]+");
+    String lastToken = null;
+    for (int i = tokens.length - 1; i >= 0; --i) {
+      if (!tokens[i].isEmpty()) {
+        lastToken = tokens[i];
+        break;
+      }
+    }
+    if (null == lastToken) {
+      return "";
+    }
+    final StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append(Character.toLowerCase(lastToken.charAt(0)));
+    for (int i = 1; i < lastToken.length(); ++i) {
+      char c = lastToken.charAt(i);
+      if (Character.isUpperCase(c)) {
+        stringBuilder.append("_").append(Character.toLowerCase(c));
+      } else {
+        stringBuilder.append(c);
+      }
+    }
+    if (isMember) {
+      stringBuilder.append("_");
+    }
+    return stringBuilder.toString();
+  }
+
   public static class VariableCompletionProvider extends CompletionProvider<CompletionParameters> {
     @Override
     protected void addCompletions(@NotNull CompletionParameters completionParameters,
                                   ProcessingContext processingContext,
                                   @NotNull CompletionResultSet completionResultSet) {
-      PsiElement psiElement = completionParameters.getOriginalPosition();
+      final PsiElement psiElement = completionParameters.getOriginalPosition();
       if (null == psiElement) {
         return;
       }
-      PsiElement parent = psiElement.getParent();
+      final PsiElement parent = psiElement.getParent();
       if (null == parent) {
         return;
       }
-      PsiElement prevSibling = parent.getPrevSibling();
+      final PsiElement prevSibling = parent.getPrevSibling();
       if (null == prevSibling || !(prevSibling instanceof PsiWhiteSpace)) {
         return;
       }
-      PsiElement prevPrevSibling = prevSibling.getPrevSibling();
+      final PsiElement prevPrevSibling = prevSibling.getPrevSibling();
       if (null == prevPrevSibling || !(prevPrevSibling instanceof OCTypeElement)) {
         return;
       }
-      String typeText = prevPrevSibling.getText();
+      final String typeText = prevPrevSibling.getText();
       if (null == typeText || typeText.isEmpty()) {
         return;
       }
-      StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append(Character.toLowerCase(typeText.charAt(0)));
-      for (int i = 1; i < typeText.length(); ++i) {
-        char c = typeText.charAt(i);
-        if (Character.isUpperCase(c)) {
-          stringBuilder.append("_").append(Character.toLowerCase(c));
-        } else {
-          stringBuilder.append(c);
+      boolean isMember = false;
+      final PsiElement grandPa = parent.getParent();
+      if (null != grandPa) {
+        final PsiElement ancestor = grandPa.getParent();
+        if (null != ancestor) {
+          isMember = ancestor instanceof OCStruct;
         }
       }
-      LookupElement lookupElement = new GoogleStyleVariableNameElement(stringBuilder.toString());
+      final String variableName = getVarableFromType(typeText, isMember);
+      LookupElement lookupElement = new GoogleStyleVariableNameElement(variableName);
       completionResultSet.addElement(lookupElement);
     }
   }
