@@ -3,7 +3,7 @@ CLion-GoogleCppStyleCompletion
 
 A CLion plugin that provides [Google C++ Style](https://google.github.io/styleguide/cppguide.html) code completion suggestions.
 
-For example, if you are declaring a variable with type "YouCustomizedClass", clion will provide several suggestions like "yourCustomizedClass", "yourCustomized", "your", etc. This plugin adds an additional suggestion "your_customized_class".
+For example, if you are declaring a variable with type "YourCustomizedClass", clion will provide several suggestions like "yourCustomizedClass", "yourCustomized", "your", etc. This plugin adds an additional suggestion "your_customized_class".
 
 Requirements
 ============
