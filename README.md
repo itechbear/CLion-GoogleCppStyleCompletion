@@ -5,6 +5,16 @@ A CLion plugin that provides [Google C++ Style](https://google.github.io/stylegu
 
 For example, if you are declaring a variable with type "YourCustomizedClass", clion will provide several suggestions like "yourCustomizedClass", "yourCustomized", "your", etc. This plugin adds an additional suggestion "your_customized_class".
 
+Features
+========
+
+The following elements are supported by this plugin:
+
+ - Variable names. (YourCustomizedClass -> *your_customized_class*)
+ - Member variable names. (YourCustomizedClass -> *your_customized_class_*)
+ - Header guards. (base/file.h -> *BASE_FILE_CC_H_*)
+ - Namespace names. (base/file.h -> namespace *base*)
+
 Requirements
 ============
 

@@ -1,18 +1,21 @@
 <idea-plugin version="2">
   <id>com.github.itechbear.googlecppstylecompletion</id>
   <name>CLion-GoogleCppStyleCompletion</name>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
   <vendor email="itechbear@gmail.com" url="http://github.com/itechbear/googlecppstylecompletion">itechbear</vendor>
 
   <description><![CDATA[
       This plugin provides <https://google.github.io/styleguide/cppguide.html>Google C++ Style</a> suggestions for code completions for following elements: <br />
       <ol>
         <li>Variable names</li>
+        <li>Member variable names</li>
         <li>Header guards</li>
+        <li>Namespace names</li>
       </ol>
     ]]></description>
 
   <change-notes><![CDATA[
+      0.1.3 Added namespace names suggestions. <br /><br />
       0.1.2 Added header guard suggestions. <br /><br />
       0.1.1 Fixed name suggestions when its type contains namespaces or smart pointers. <br /><br />
       0.1 Added variable name suggestion support.
