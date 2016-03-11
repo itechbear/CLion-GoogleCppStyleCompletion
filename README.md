@@ -12,7 +12,7 @@ The following elements are supported by this plugin:
 
  - Variable names. (YourCustomizedClass -> *your_customized_class*)
  - Member variable names. (YourCustomizedClass -> *your_customized_class_*)
- - Header guards. (base/file.h -> *BASE_FILE_CC_H_*)
+ - Header guards. (base/file.h -> *BASE_FILE_H_*)
  - Namespace names. (base/file.h -> namespace *base*)
 
 Requirements
