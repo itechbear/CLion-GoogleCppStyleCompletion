@@ -8,6 +8,7 @@
       This plugin provides <https://google.github.io/styleguide/cppguide.html>Google C++ Style</a> suggestions for code completions for following elements: <br />
       <ol>
         <li>Variable names</li>
+        <li>Header guards</li>
       </ol>
     ]]></description>
 
