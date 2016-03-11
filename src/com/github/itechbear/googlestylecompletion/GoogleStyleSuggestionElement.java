@@ -7,10 +7,10 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Created by dell on 3/10/16.
  */
-public class GoogleStyleVariableNameElement extends LookupElement implements LookupValueWithPriority {
+public class GoogleStyleSuggestionElement extends LookupElement implements LookupValueWithPriority {
   private final String name;
 
-  public GoogleStyleVariableNameElement(@NotNull final String name) {
+  public GoogleStyleSuggestionElement(@NotNull final String name) {
     this.name = name;
   }
 
@@ -22,6 +22,6 @@ public class GoogleStyleVariableNameElement extends LookupElement implements Loo
 
   @Override
   public int getPriority() {
-    return 1000;
+    return HIGHER;
   }
 }

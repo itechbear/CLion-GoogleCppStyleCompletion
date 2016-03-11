@@ -2,15 +2,16 @@ package com.github.itechbear.googlestylecompletion;
 
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.ide.actions.CopyReferenceAction;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.util.ProcessingContext;
+import com.jetbrains.cidr.lang.OCFileTypeHelpers;
 import com.jetbrains.cidr.lang.OCLanguage;
-import com.jetbrains.cidr.lang.psi.OCDirective;
+import com.jetbrains.cidr.lang.parser.OCPreprocessorDirectiveElementType;
 import com.jetbrains.cidr.lang.psi.OCStruct;
 import com.jetbrains.cidr.lang.psi.OCTypeElement;
 import org.jetbrains.annotations.NotNull;
@@ -19,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
  * Created by dell on 3/10/16.
  */
 
-public class GoogleStyleVariableNameCompletionContributor extends CompletionContributor {
-  public GoogleStyleVariableNameCompletionContributor() {
+public class GoogleStyleNameCompletionContributor extends CompletionContributor {
+  public GoogleStyleNameCompletionContributor() {
     extend(CompletionType.BASIC,
         PlatformPatterns.psiElement(LeafPsiElement.class).withLanguage(OCLanguage.getInstance()),
         new VariableCompletionProvider()
@@ -76,20 +77,26 @@ public class GoogleStyleVariableNameCompletionContributor extends CompletionCont
       }
     }
     final String variableName = getVarableFromType(type, isMember);
-    LookupElement lookupElement = new GoogleStyleVariableNameElement(variableName);
+    LookupElement lookupElement = new GoogleStyleSuggestionElement(variableName);
     completionResultSet.addElement(lookupElement);
   }
 
   public static void suggestFileGuards(@NotNull final PsiElement self,
                                        @NotNull CompletionResultSet completionResultSet) {
-    PsiFile psiFile = self.getContainingFile();
+    final PsiFile psiFile = self.getContainingFile();
     if (null == psiFile) {
       return;
     }
-    PsiReference psiReference = psiFile.getReference();
-    if (null == psiReference) {
+    final String relativePath = CopyReferenceAction.elementToFqn(psiFile);
+    if (null == relativePath) {
       return;
     }
+    if (!OCFileTypeHelpers.isHeaderFile(relativePath)) {
+      return;
+    }
+    final String headerGuard = relativePath.replaceAll("[^\\w_]", "_").toUpperCase() + "_";
+    LookupElement lookupElement = new GoogleStyleSuggestionElement(headerGuard);
+    completionResultSet.addElement(lookupElement);
   }
 
   public static class VariableCompletionProvider extends CompletionProvider<CompletionParameters> {
@@ -114,8 +121,10 @@ public class GoogleStyleVariableNameCompletionContributor extends CompletionCont
         return;
       }
       if (prevPrevSibling instanceof OCTypeElement) {
+        // Variable declaration
         suggestVariableNames(parent, prevPrevSibling, completionResultSet);
-      } else if (prevPrevSibling instanceof OCDirective) {
+      } else if (((LeafPsiElement) prevPrevSibling).getElementType() instanceof OCPreprocessorDirectiveElementType) {
+        // Header guard
         suggestFileGuards(psiElement, completionResultSet);
       }
     }

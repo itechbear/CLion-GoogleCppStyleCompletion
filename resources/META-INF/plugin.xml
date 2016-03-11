@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>com.github.itechbear.googlecppstylecompletion</id>
   <name>CLion-GoogleCppStyleCompletion</name>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <vendor email="itechbear@gmail.com" url="http://github.com/itechbear/googlecppstylecompletion">itechbear</vendor>
 
   <description><![CDATA[
@@ -12,7 +12,9 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      0.1 Add variable name suggestion support.
+      0.1.2 Added header guard suggestions. <br /><br />
+      0.1.1 Fixed name suggestions when its type contains namespaces or smart pointers. <br /><br />
+      0.1 Added variable name suggestion support.
     ]]>
   </change-notes>
 
@@ -30,7 +32,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-    <completion.contributor language="ObjectiveC" implementationClass="com.github.itechbear.googlestylecompletion.GoogleStyleVariableNameCompletionContributor"/>
+    <completion.contributor language="ObjectiveC" implementationClass="com.github.itechbear.googlestylecompletion.GoogleStyleNameCompletionContributor"/>
   </extensions>
 
   <actions>
