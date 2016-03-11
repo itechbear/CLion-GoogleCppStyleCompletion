@@ -4,10 +4,13 @@ import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.util.ProcessingContext;
 import com.jetbrains.cidr.lang.OCLanguage;
+import com.jetbrains.cidr.lang.psi.OCDirective;
 import com.jetbrains.cidr.lang.psi.OCStruct;
 import com.jetbrains.cidr.lang.psi.OCTypeElement;
 import org.jetbrains.annotations.NotNull;
@@ -57,6 +60,38 @@ public class GoogleStyleVariableNameCompletionContributor extends CompletionCont
     return stringBuilder.toString();
   }
 
+  public static void suggestVariableNames(@NotNull final PsiElement parent,
+                                          @NotNull final PsiElement prevPrevSibling,
+                                          @NotNull CompletionResultSet completionResultSet) {
+    final String type = prevPrevSibling.getText();
+    if (null == type || type.isEmpty()) {
+      return;
+    }
+    boolean isMember = false;
+    final PsiElement grandPa = parent.getParent();
+    if (null != grandPa) {
+      final PsiElement ancestor = grandPa.getParent();
+      if (null != ancestor) {
+        isMember = ancestor instanceof OCStruct;
+      }
+    }
+    final String variableName = getVarableFromType(type, isMember);
+    LookupElement lookupElement = new GoogleStyleVariableNameElement(variableName);
+    completionResultSet.addElement(lookupElement);
+  }
+
+  public static void suggestFileGuards(@NotNull final PsiElement self,
+                                       @NotNull CompletionResultSet completionResultSet) {
+    PsiFile psiFile = self.getContainingFile();
+    if (null == psiFile) {
+      return;
+    }
+    PsiReference psiReference = psiFile.getReference();
+    if (null == psiReference) {
+      return;
+    }
+  }
+
   public static class VariableCompletionProvider extends CompletionProvider<CompletionParameters> {
     @Override
     protected void addCompletions(@NotNull CompletionParameters completionParameters,
@@ -75,24 +110,14 @@ public class GoogleStyleVariableNameCompletionContributor extends CompletionCont
         return;
       }
       final PsiElement prevPrevSibling = prevSibling.getPrevSibling();
-      if (null == prevPrevSibling || !(prevPrevSibling instanceof OCTypeElement)) {
+      if (null == prevPrevSibling) {
         return;
       }
-      final String typeText = prevPrevSibling.getText();
-      if (null == typeText || typeText.isEmpty()) {
-        return;
+      if (prevPrevSibling instanceof OCTypeElement) {
+        suggestVariableNames(parent, prevPrevSibling, completionResultSet);
+      } else if (prevPrevSibling instanceof OCDirective) {
+        suggestFileGuards(psiElement, completionResultSet);
       }
-      boolean isMember = false;
-      final PsiElement grandPa = parent.getParent();
-      if (null != grandPa) {
-        final PsiElement ancestor = grandPa.getParent();
-        if (null != ancestor) {
-          isMember = ancestor instanceof OCStruct;
-        }
-      }
-      final String variableName = getVarableFromType(typeText, isMember);
-      LookupElement lookupElement = new GoogleStyleVariableNameElement(variableName);
-      completionResultSet.addElement(lookupElement);
     }
   }
 }
