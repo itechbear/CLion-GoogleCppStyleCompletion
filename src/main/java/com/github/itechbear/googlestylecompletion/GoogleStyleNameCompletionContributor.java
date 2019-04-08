@@ -2,6 +2,7 @@ package com.github.itechbear.googlestylecompletion;
 
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.ide.actions.CopyReferenceAction;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
@@ -83,7 +84,8 @@ public class GoogleStyleNameCompletionContributor extends CompletionContributor 
       }
     }
     final String variableName = getVarableFromType(type, isMember);
-    LookupElement lookupElement = new GoogleStyleSuggestionElement(variableName);
+    // LookupElement lookupElement = new GoogleStyleSuggestionElement(variableName);
+    LookupElement lookupElement = LookupElementBuilder.create(variableName);
     completionResultSet.addElement(lookupElement);
   }
 
@@ -101,7 +103,8 @@ public class GoogleStyleNameCompletionContributor extends CompletionContributor 
       return;
     }
     final String headerGuard = relativePath.replaceAll("[^\\w_]", "_").toUpperCase() + "_";
-    LookupElement lookupElement = new GoogleStyleSuggestionElement(headerGuard);
+    // LookupElement lookupElement = new GoogleStyleSuggestionElement(headerGuard);
+    LookupElement lookupElement = LookupElementBuilder.create(headerGuard);
     completionResultSet.addElement(lookupElement);
   }
 
@@ -133,7 +136,8 @@ public class GoogleStyleNameCompletionContributor extends CompletionContributor 
     if (level >= namespaces.length) {
       return;
     }
-    LookupElement lookupElement = new GoogleStyleSuggestionElement(namespaces[level]);
+    // LookupElement lookupElement = new GoogleStyleSuggestionElement(namespaces[level]);
+    LookupElement lookupElement = LookupElementBuilder.create(namespaces[level]);
     completionResultSet.addElement(lookupElement);
   }
 
